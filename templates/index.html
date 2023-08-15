@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VIETNAMPRIME APP</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>VIETNAMPRIME APP</h1>
+
+      <!-- Phần tải lên tệp âm thanh -->
+      <form
+        id="upload-form"
+        action="/upload"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <label for="audio-input" class="custom-file-upload">
+          <input type="file" id="audio-input" name="audio" accept=".wav" />
+        </label>
+        <button type="submit" class="classify-button">Phân loại</button>
+      </form>
+
+      <!-- Phần hiển thị kết quả -->
+      {% if category %}
+      <div class="result">
+        <h3 class="youtube-header">Âm thanh kiểm tra:</h3>
+        <audio controls class="audio-player">
+          <source src="{{ audio_path }}" type="audio/wav" />
+          Your browser does not support the audio element.
+        </audio>
+        <h2>Kết quả phân loại:</h2>
+        <p class="category">Dòng nhạc được phân loại là: {{ category }}</p>
+        <p class="confidence">Độ chính xác: {{ confidence|round(2) }}%</p>
+        <p class="description">
+          Thông tin về dòng nhạc: {{ music_description }}
+          <a href="{{ info_link }}" target="_blank">Xem thêm chi tiết</a>
+        </p>
+        <h3 class="youtube-header">Video Liên kết YouTube:</h3>
+        <div class="youtube-video">
+          {% for link in youtube_links %}
+          <iframe
+            width="380"
+            height="200"
+            src="{{ link.replace('watch?v=', 'embed/') }}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+          {% endfor %}
+        </div>
+        <h3 class="spectrogram-header">Ảnh Spectrogram:</h3>
+        <div class="spectrogram-container">
+          <img
+            src="{{ segment_img_paths }}"
+            alt="Best Spectrogram"
+            class="best-spectrogram"
+          />
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
