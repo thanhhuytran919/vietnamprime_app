@@ -99,17 +99,17 @@ def index():
     return render_template('index.html')
 
 
-# if __name__ == '__main__':
-#     # Đảm bảo rằng thư mục 'build' đã được tạo
-#     os.makedirs('build', exist_ok=True)
+if __name__ == '__main__':
+    # Đảm bảo rằng thư mục 'build' đã được tạo
+    os.makedirs('build', exist_ok=True)
 
-#     # Chạy ứng dụng và lưu trang HTML đã render vào thư mục 'build'
-#     with app.app_context():
-#         html = render_template('index.html')
-#         with open('build/index.html', 'w') as f:
-#             f.write(html)
+    # Chạy ứng dụng và lưu trang HTML đã render vào thư mục 'build'
+    with app.app_context():
+        html = render_template('index.html')
+        with open('build/index.html', 'w') as f:
+            f.write(html)
 
-#     app.run(debug=True)
+    app.run(debug=True)
 
 
 @app.route('/uploads/<filename>')
