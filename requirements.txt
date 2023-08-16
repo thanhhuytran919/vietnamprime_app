@@ -4,4 +4,5 @@ matplotlib==3.7.1
 keras==2.12.0
 librosa==0.10.0
 tensorflow==2.12.0
+opencv-python==4.7.0.72
 # Các thư viện khác mà ứng dụng của bạn cần
