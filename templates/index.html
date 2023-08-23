@@ -34,6 +34,14 @@
           <source src="{{ audio_path }}" type="audio/wav" />
           Your browser does not support the audio element.
         </audio>
+        <h3 class="spectrogram-header">Ảnh Spectrogram:</h3>
+        <div class="spectrogram-container">
+          <img
+            src="{{ segment_img_paths }}"
+            alt="Best Spectrogram"
+            class="best-spectrogram"
+          />
+        </div>
         <h2>Kết quả phân loại:</h2>
         <p class="category">Dòng nhạc được phân loại là: {{ category }}</p>
         <p class="confidence">Độ chính xác: {{ confidence|round(2) }}%</p>
@@ -52,14 +60,6 @@
             allowfullscreen
           ></iframe>
           {% endfor %}
-        </div>
-        <h3 class="spectrogram-header">Ảnh Spectrogram:</h3>
-        <div class="spectrogram-container">
-          <img
-            src="{{ segment_img_paths }}"
-            alt="Best Spectrogram"
-            class="best-spectrogram"
-          />
         </div>
       </div>
       {% endif %}

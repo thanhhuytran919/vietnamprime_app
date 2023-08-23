@@ -8,6 +8,7 @@ import time
 import soundfile as sf
 import os
 
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
@@ -72,7 +73,7 @@ def cut_wav_file(input_file, output_directory, duration):
     data, samplerate = sf.read(input_file)
 
     # Tính toán số lượng phần cần cắt
-    num_parts = int(len(data) / (samplerate * duration)) + 1
+    num_parts = int(len(data) / (samplerate * duration))
 
     count = 0
     segment_parts = []
@@ -99,17 +100,17 @@ def index():
     return render_template('index.html')
 
 
-if __name__ == '__main__':
-    # Đảm bảo rằng thư mục 'build' đã được tạo
-    os.makedirs('build', exist_ok=True)
+# if __name__ == '__main__':
+#     # Đảm bảo rằng thư mục 'build' đã được tạo
+#     os.makedirs('build', exist_ok=True)
 
-    # Chạy ứng dụng và lưu trang HTML đã render vào thư mục 'build'
-    with app.app_context():
-        html = render_template('index.html')
-        with open('build/index.html', 'w') as f:
-            f.write(html)
+#     # Chạy ứng dụng và lưu trang HTML đã render vào thư mục 'build'
+#     with app.app_context():
+#         html = render_template('index.html')
+#         with open('build/index.html', 'w') as f:
+#             f.write(html)
 
-    app.run(debug=True)
+#     app.run(debug=True)
 
 
 @app.route('/uploads/<filename>')
@@ -170,33 +171,52 @@ def upload():
         class_name = categories[np.argmax(pred)]
         confidence = pred[0][np.argmax(pred)] * 100
 
+        print(
+            f"Segment {i + 1}: Nhãn: {class_name}, Độ chính xác: {confidence}%")
+
         segment_results.append(
             {'segment_number': i, 'class_name': class_name, 'confidence': confidence, 'img_path': img_path})
 
-    best_segment = max(segment_results, key=lambda x: x['confidence'])
-    best_class_name = best_segment['class_name']
-    best_confidence = best_segment['confidence']
-    best_segment_number = best_segment['segment_number']
+    label_counts = {}  # Đếm số lần xuất hiện của từng nhãn
+    label_confidences = {}  # Lưu lại độ tin cậy của từng nhãn
+
+    for result in segment_results:
+        label_name = result['class_name']
+        confidence = result['confidence']
+        if label_name not in label_counts:
+            label_counts[label_name] = 1
+            label_confidences[label_name] = confidence
+        else:
+            label_counts[label_name] += 1
+            label_confidences[label_name] += confidence
+
+    # Tìm nhãn có số lần xuất hiện nhiều nhất
+    most_common_label = max(label_counts, key=label_counts.get)
+    most_common_count = label_counts[most_common_label]
+    most_common_confidence = label_confidences[most_common_label] / \
+        most_common_count
 
     # Đọc thông tin từ tệp văn bản cho class_name
-    info_link = read_info_link(best_class_name)
-    info_music = read_info_music(best_class_name)
-    music_description = music_info.get(best_class_name, "Không có thông tin")
+    info_link = read_info_link(most_common_label)
+    info_music = read_info_music(most_common_label)
+    music_description = music_info.get(most_common_label, "Không có thông tin")
 
     audio_path = f'uploads/audio.wav?t={int(time.time())}'
-    segment_img_paths = f'static/spectrogram{best_segment_number}.png'
+
+    # Định nghĩa đường dẫn ảnh cho đoạn phổ biến nhất
+    segment_img_paths = f'static/spectrogram{most_common_count - 1}.png'
 
     return render_template(
         'index.html',
         category=info_music,
-        confidence=best_confidence,
+        confidence=most_common_confidence,
         music_description=music_description,
         audio_path=audio_path,
         info_link=info_link,
-        youtube_links=youtube_links.get(best_class_name, []),
+        youtube_links=youtube_links.get(most_common_label, []),
         segment_img_paths=segment_img_paths,
     )
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
+    app.run(debug=True)
