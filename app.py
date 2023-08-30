@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import time
 import soundfile as sf
 import os
-
+import statistics  # Thêm import thư viện statistics
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -100,19 +100,6 @@ def index():
     return render_template('index.html')
 
 
-# if __name__ == '__main__':
-#     # Đảm bảo rằng thư mục 'build' đã được tạo
-#     os.makedirs('build', exist_ok=True)
-
-#     # Chạy ứng dụng và lưu trang HTML đã render vào thư mục 'build'
-#     with app.app_context():
-#         html = render_template('index.html')
-#         with open('build/index.html', 'w') as f:
-#             f.write(html)
-
-#     app.run(debug=True)
-
-
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -192,9 +179,22 @@ def upload():
 
     # Tìm nhãn có số lần xuất hiện nhiều nhất
     most_common_label = max(label_counts, key=label_counts.get)
-    most_common_count = label_counts[most_common_label]
-    most_common_confidence = label_confidences[most_common_label] / \
-        most_common_count
+
+    # Tìm độ chính xác cao nhất trong mảng các kết quả có nhãn trùng với nhãn xuất hiện nhiều nhất
+    most_common_results = [
+        result for result in segment_results if result['class_name'] == most_common_label]
+    highest_accuracy_common = max(
+        most_common_results, key=lambda x: x['confidence'])['confidence']
+
+    # Tính độ chính xác trung bình của nhãn cao nhất
+    total_accuracy_common = sum(
+        result['confidence'] for result in most_common_results) / len(most_common_results)
+
+    # Tính giá trị trung vị của mảng độ chính xác của nhãn cao nhất
+    last_segment_confidences_common = [
+        result['confidence'] for result in most_common_results]
+    median_confidence_common = statistics.median(
+        last_segment_confidences_common)
 
     # Đọc thông tin từ tệp văn bản cho class_name
     info_link = read_info_link(most_common_label)
@@ -204,12 +204,14 @@ def upload():
     audio_path = f'uploads/audio.wav?t={int(time.time())}'
 
     # Định nghĩa đường dẫn ảnh cho đoạn phổ biến nhất
-    segment_img_paths = f'static/spectrogram{most_common_count - 1}.png'
+    segment_img_paths = f'static/spectrogram{most_common_results[-1]["segment_number"]}.png'
 
     return render_template(
         'index.html',
         category=info_music,
-        confidence=most_common_confidence,
+        confidence_common=total_accuracy_common,
+        highest_accuracy_common=highest_accuracy_common,
+        median_confidence_common=median_confidence_common,
         music_description=music_description,
         audio_path=audio_path,
         info_link=info_link,

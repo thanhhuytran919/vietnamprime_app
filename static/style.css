@@ -15,17 +15,38 @@ body {
   justify-content: center;
   min-height: 100vh;
   margin: 0 10%;
+  background-image: linear-gradient(
+    to right top,
+    #5a123b,
+    #5d2651,
+    #5d3865,
+    #5b4977,
+    #595986,
+    #576b99,
+    #547dab,
+    #5190ba,
+    #46abd0,
+    #3ec6e1,
+    #44e1ec,
+    #5ffbf1
+  );
 }
 
 /* Header Styles */
 h1 {
   font-size: 48px;
-  margin: 30px 0;
-  text-align: center;
-  background: linear-gradient(to right, #007bff, #00bfff);
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: textGradient 5s linear infinite;
+  font-family: "Luckiest Guy";
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: 0px -1px 0 #212121, 0px -1px 0 #212121, 0px 1px 0 #212121,
+    0px 1px 0 #212121, -1px 0px 0 #212121, 1px 0px 0 #212121, -1px 0px 0 #212121,
+    1px 0px 0 #212121, -1px -1px 0 #212121, 1px -1px 0 #212121,
+    -1px 1px 0 #212121, 1px 1px 0 #212121, -1px 1px 0 #212121, 0px 1px 0 #212121,
+    1px 1px 0 #212121, 0 0 6px rgba(0, 0, 0, 0.1), 0 6px 3px rgba(0, 0, 0, 0.3),
+    0 12px 6px rgba(0, 0, 0, 0.2), 0 18px 18px rgba(0, 0, 0, 0.25),
+    0 24px 24px rgba(0, 0, 0, 0.2), 0 36px 36px rgba(0, 0, 0, 0.15);
+  margin: 3%;
 }
 
 @keyframes textGradient {
@@ -47,7 +68,22 @@ form {
 
 label.custom-file-upload:hover {
   background-color: #f0f0;
-  color: #007bff;
+  color: linear-gradient(
+    to right top,
+    #992969,
+    #9d4b8c,
+    #9d69aa,
+    #9d85c3,
+    #9fa0d7,
+    #92a6d8,
+    #88acd6,
+    #82b0d2,
+    #65a2bc,
+    #4b93a4,
+    #37848a,
+    #297470
+  );
+  color: #fff;
 }
 
 button[type="submit"] {
@@ -59,12 +95,41 @@ button[type="submit"] {
   font-size: 18px;
   cursor: pointer;
   margin-top: 10px;
-  background-image: linear-gradient(to right, #007bff, #00bfff);
+  background-image: linear-gradient(
+    to right top,
+    #5a123b,
+    #5d2651,
+    #5d3865,
+    #5b4977,
+    #595986,
+    #576b99,
+    #547dab,
+    #5190ba,
+    #46abd0,
+    #3ec6e1,
+    #44e1ec,
+    #5ffbf1
+  );
   transition: background-color 0.3s, transform 0.2s;
 }
 
 button[type="submit"]:hover {
   background-color: #0056b3;
+  background-image: linear-gradient(
+    to right top,
+    #992969,
+    #9d4b8c,
+    #9d69aa,
+    #9d85c3,
+    #9fa0d7,
+    #92a6d8,
+    #88acd6,
+    #82b0d2,
+    #65a2bc,
+    #4b93a4,
+    #37848a,
+    #297470
+  );
   transform: scale(1.05);
 }
 
@@ -80,7 +145,21 @@ input[type="file"] {
 input[type="file"]::file-selector-button {
   margin-right: 20px;
   border: none;
-  background: linear-gradient(to right, #007bff, #00bfff);
+  background: linear-gradient(
+    to right top,
+    #5a123b,
+    #5d2651,
+    #5d3865,
+    #5b4977,
+    #595986,
+    #576b99,
+    #547dab,
+    #5190ba,
+    #46abd0,
+    #3ec6e1,
+    #44e1ec,
+    #5ffbf1
+  );
   padding: 10px 10px;
   border-radius: 10px;
   color: #fff;
@@ -91,6 +170,7 @@ input[type="file"]::file-selector-button {
 h2 {
   font-size: 32px;
   margin-top: 20px;
+  text-align: center;
 }
 
 p {
@@ -101,8 +181,7 @@ p {
 /* Image Styles */
 img {
   max-width: 100%;
-  height: auto;
-  margin-top: 10px;
+  height: 100%;
 }
 
 /* Audio Styles */
@@ -126,7 +205,7 @@ a:focus {
 }
 
 .result {
-  background-color: #cac8c8; /* Màu nền cho kết quả */
+  background-color: #eae8e8; /* Màu nền cho kết quả */
   padding: 20px;
   border-radius: 10px;
   margin-top: 20px;
@@ -157,10 +236,174 @@ a:focus {
 
 /* Thêm phần mở rộng cho hover vào phần tải lên tệp âm thanh */
 .custom-file-upload:hover input[type="file"]::file-selector-button {
-  background: linear-gradient(to right, #0056b3, #007bff);
+  background-image: linear-gradient(
+    to right top,
+    #992969,
+    #9d4b8c,
+    #9d69aa,
+    #9d85c3,
+    #9fa0d7,
+    #92a6d8,
+    #88acd6,
+    #82b0d2,
+    #65a2bc,
+    #4b93a4,
+    #37848a,
+    #297470
+  );
+}
+
+.custom-file-upload input[type="file"] {
+  /* Đổi màu nền */
+  background-color: linear-gradient(
+    to right top,
+    #5a123b,
+    #5d2651,
+    #5d3865,
+    #5b4977,
+    #595986,
+    #576b99,
+    #547dab,
+    #5190ba,
+    #46abd0,
+    #3ec6e1,
+    #44e1ec,
+    #5ffbf1
+  ); /* Màu mặc định */
+  color: #fff; /* Màu chữ */
+  /* border: none; Bỏ viền */
+  padding: 12px 24px;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .best-spectrogram {
   max-width: 100%;
   height: auto;
+}
+/* Existing CSS styles */
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+
+.grid-item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative; /* Để định vị caption */
+  overflow: hidden;
+}
+
+.grid-item img {
+  transition: transform 0.3s; /* Thêm hiệu ứng transition cho transform */
+}
+
+.grid-item:hover img {
+  transform: scale(1.1); /* Phóng to ảnh khi hover */
+}
+
+.grid-item figcaption {
+  transition: transform 0.3s, opacity 0.3s; /* Hiệu ứng phóng to và hiển thị caption */
+  position: absolute;
+  bottom: -50%; /* Đặt caption dưới cùng của grid-item */
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  max-width: 65%;
+  width: 62%;
+  padding: 10px;
+  text-align: center;
+  font-size: 16px;
+  opacity: 0; /* Ẩn caption ban đầu */
+}
+
+.grid-item:hover figcaption {
+  bottom: 0; /* Hiện caption khi hover */
+  opacity: 1;
+}
+
+.result-item {
+  width: 100%; /* Độ rộng của mỗi phần */
+  margin: 10px; /* Khoảng cách giữa các phần */
+  text-align: center;
+}
+
+/* Căn chỉnh âm thanh kiểm tra và ảnh Spectrogram */
+.best-spectrogram {
+  width: 40%;
+}
+
+.audio-player {
+  width: 90%;
+}
+
+.result-flex {
+  display: flex;
+}
+
+/* CSS cho phần kết quả */
+.result {
+  background-color: #f0f0f0; /* Màu nền cho phần kết quả */
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho phần kết quả */
+  text-align: center; /* Canh giữa nội dung trong phần kết quả */
+}
+
+/* CSS cho % độ chính xác */
+.confidence {
+  font-size: 24px;
+  margin-top: 10px;
+  color: #000; /* Màu chữ cho % độ chính xác */
+}
+
+/* CSS cho % độ chính xác trung vị */
+.median-confidence {
+  font-size: 24px;
+  margin-top: 10px;
+  color: #000; /* Màu chữ cho % độ chính xác trung vị */
+}
+
+/* CSS cho mô tả dòng nhạc */
+.description {
+  font-size: 18px;
+  margin-top: 20px;
+  color: #000000; /* Màu chữ cho mô tả dòng nhạc */
+}
+
+.category {
+  font-size: 24px;
+}
+
+/* CSS cho footer */
+footer {
+  text-align: center; /* Căn giữa nội dung văn bản trong footer */
+  background-color: linear-gradient(
+    to right top,
+    #5a123b,
+    #5d2651,
+    #5d3865,
+    #5b4977,
+    #595986,
+    #576b99,
+    #547dab,
+    #5190ba,
+    #46abd0,
+    #3ec6e1,
+    #44e1ec,
+    #5ffbf1
+  ); /* Màu mặc định */
+  color: white; /* Màu chữ cho footer */
+  margin-top: 3%;
+  width: 125%;
+  padding: 10px 0;
+  border-top: 2px solid #ccc; /* Đường gạch ngang màu xám */
 }
