@@ -110,6 +110,7 @@
             id="audio-input"
             name="audio"
             accept=".wav"
+            onchange="validateAudioFile(this)"
           />
         </label>
         <button type="submit" class="classify-button">Dự đoán</button>
@@ -173,6 +174,26 @@
       {% endif %}
     </div>
     <script>
+      function validateAudioFile(input) {
+        const maxDuration = 300; // 5 phút (5 * 60 giây)
+        const file = input.files[0];
+
+        if (file) {
+          const objectURL = URL.createObjectURL(file);
+          const audioElement = new Audio(objectURL);
+
+          audioElement.addEventListener("loadedmetadata", function () {
+            const duration = audioElement.duration;
+
+            if (duration > maxDuration) {
+              alert(
+                "Tệp âm thanh quá dài. Vui lòng chọn tệp âm thanh dưới 5 phút."
+              );
+              input.value = ""; // Xóa tệp đã chọn
+            }
+          });
+        }
+      }
       document
         .getElementById("upload-form")
         .addEventListener("submit", function (event) {
