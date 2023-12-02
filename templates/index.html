@@ -8,6 +8,47 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
+    <style>
+      /* Thêm CSS cho tabs */
+      .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+      }
+
+      /* Thêm CSS cho buttons trong tabs */
+      .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+      }
+
+      /* Thay đổi màu nền của buttons khi hover */
+      .tab button:hover {
+        background-color: #ddd;
+      }
+
+      /* Tạo class active cho tablinks */
+      .tab button.active {
+        background-color: #ccc;
+      }
+
+      /* Thêm CSS cho nội dung của tabs */
+      .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+      }
+
+
+      
+    </style>
   </head>
   <body>
     <h1>VIETNAMPRIME APP</h1>
@@ -138,42 +179,182 @@
             </div>
           </div>
         </div>
-        <h2>Kết quả dự đoán</h2>
-        <p class="category">
-          Dòng nhạc được phân loại là: <strong>{{ category }} </strong>
-        </p>
-        <p class="confidence">
-          Độ chính xác cao nhất:
-          <strong>{{ highest_accuracy_common|round(2) }}% </strong>
-        </p>
-        <p class="confidence">
-          Độ chính xác trung bình:
-          <strong>{{ confidence_common|round(2) }}% </strong>
-        </p>
-        <p class="median-confidence">
-          Độ chính xác trung vị:
-          <strong>{{ median_confidence_common|round(2) }}% </strong>
-        </p>
-        <p class="description">
-          Thông tin về dòng nhạc: {{ music_description }}
-          <a href="{{ info_link }}" target="_blank">Xem thêm chi tiết</a>
-        </p>
-        <h3 class="youtube-header">Video liên quan</h3>
-        <div class="youtube-video">
-          {% for link in youtube_links %}
-          <iframe
-            width="360"
-            height="200"
-            src="{{ link.replace('watch?v=', 'embed/') }}"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
-          {% endfor %}
+        <div class="tab">
+          <button class="tablinks" onclick="openTab(event, 'resultsTab')">
+            Kết quả
+          </button>
+          <button class="tablinks" onclick="openTab(event, 'ontologyTab')">
+            Ontology
+          </button>
+        </div>
+        <div id="resultsTab" class="tabcontent">
+          <h2>Kết quả dự đoán</h2>
+          
+          <p class="category">
+            Dòng nhạc được phân loại là: <strong>{{ category }} </strong>
+          </p>
+          <p class="confidence">
+            Độ chính xác cao nhất:
+            <strong>{{ highest_accuracy_common|round(2) }}% </strong>
+          </p>
+          <p class="confidence">
+            Độ chính xác trung bình:
+            <strong>{{ confidence_common|round(2) }}% </strong>
+          </p>
+          <p class="median-confidence">
+            Độ chính xác trung vị:
+            <strong>{{ median_confidence_common|round(2) }}% </strong>
+          </p>
+          <p class="description">
+            Thông tin về dòng nhạc: {{ music_description }}
+            <a href="{{ info_link }}" target="_blank">Xem thêm chi tiết</a>
+          </p>
+          <h3 class="youtube-header">Video liên quan</h3>
+          <div class="youtube-video">
+            {% for link in youtube_links %}
+            <iframe
+              width="360"
+              height="200"
+              src="{{ link.replace('watch?v=', 'embed/') }}"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="ontology-info">
+            <div id="ontologyTab" class="tabcontent">
+                <!-- Phần Ontology -->
+                <h3>Thông tin từ ontology</h3>
+    
+                    <div class="tab_onto">
+                        <button class="tablinks_onto" onclick="openCity(event, 'mt')">Mô tả</button>
+                        <button class="tablinks_onto" onclick="openCity(event, 'London')">Là của dân tộc</button>
+                        <button class="tablinks_onto" onclick="openCity(event, 'Paris')">Có nguồn gốc từ</button>
+                        <button class="tablinks_onto" onclick="openCity(event, 'Tokyo')">Là nhạc của</button>
+                        <button class="tablinks_onto" onclick="openCity(event, 'tdn')">Thuộc dòng nhạc</button>
+                        <button class="tablinks_onto" onclick="openCity(event, 'tptb')">Các tác phẩm tiêu biểu</button>
+                        
+                    </div>
+                    <div id="container_content">
+                        <div id="mt" class="tabcontent_onto">
+                            <h4>Mô tả:</h4>
+                                <p>{{ ontology_info[0]["Mô tả"] }}</p>
+                        </div>
+                        <div id="London" class="tabcontent_onto">
+                            <h4>Là của dân tộc:</h4>
+                                {% for dan_toc in ontology_info[0]["Là của dân tộc"] %}
+                                    <p>{{ dan_toc }}</p>
+                                {% endfor %}
+                        </div>
+                        
+                        <div id="Paris" class="tabcontent_onto">
+                            <h4>Có nguồn gốc từ:</h4>
+                            {% for nguon_goc in ontology_info[0]["Có nguồn gốc từ"] %}
+                            <p>{{ nguon_goc }}</p>
+                            {% endfor %}
+                        </div>
+                        
+                        <div id="Tokyo" class="tabcontent_onto">
+                            <h4>Là nhạc của:</h4>
+                            {% for nhac_cua in ontology_info[0]["Là nhạc của"] %}
+                            <p>{{ nhac_cua }}</p>
+                            {% endfor %}
+                        </div>
+                        <div id="tdn" class="tabcontent_onto">
+                            <h4>Thuộc dòng nhạc:</h4>
+                            {% for dong_nhac in ontology_info[0]["Thuộc dòng nhạc"] %}
+                            <p>{{ dong_nhac }}</p>
+                            {% endfor %}
+                        </div>
+                        <div id="tptb" class="tabcontent_onto">
+                            <h4>Các tác phẩm tiêu biểu:</h4>
+                            {% for info in ontology_info %}
+                            <h4>Tác phẩm {{ loop.index }}</h4>
+                            <p>Tên tác phẩm: {{ info["Tên tác phẩm"] }}</p>
+                            <p>Của tác giả: {{ info["Của tác giả"] }}</p>
+                            <p>
+                                Link bài hát:
+                                <a href="{{ info['Link bài hát'] }}" target="_blank"
+                                >{{ info["Link bài hát"] }}</a
+                                >
+                            </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <img src="https://media.loveitopcdn.com/3807/la-co-viet-nam-vector-1.png" alt="Cờ Việt Nam" width="1" height="1">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+
+            </div>  
+          </div>
         </div>
       </div>
       {% endif %}
     </div>
     <script>
+      function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+      document.getElementById("resultsTab").style.display = "block";
+
+      function openCity(evt, cityName) {
+        var i, tabcontent_onto, tablinks_onto;
+        tabcontent_onto = document.getElementsByClassName("tabcontent_onto");
+        for (i = 0; i < tabcontent_onto.length; i++) {
+            tabcontent_onto[i].style.display = "none";
+        }
+        tablinks_onto = document.getElementsByClassName("tablinks_onto");
+        for (i = 0; i < tablinks_onto.length; i++) {
+            tablinks_onto[i].className = tablinks_onto[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+        }
+        function showDefaultTabOnto() {
+            var defaultTabOnto = document.getElementById("mt"); // ID của tab mặc định
+            var tabcontent_onto = document.getElementsByClassName("tabcontent_onto");
+
+            // Ẩn tất cả các tabcontent_onto trước khi hiển thị tab mặc định
+            for (var i = 0; i < tabcontent_onto.length; i++) {
+            tabcontent_onto[i].style.display = "none";
+            }
+
+            if (defaultTabOnto) {
+            defaultTabOnto.style.display = "block";
+            }
+        }
+
+        // ... (các đoạn mã khác)
+
+        // Gọi hàm showDefaultTabOnto khi trang được load
+        window.addEventListener("load", function () {
+            showDefaultTabOnto();
+        });
+        
       function validateAudioFile(input) {
         const maxDuration = 300; // 5 phút (5 * 60 giây)
         const file = input.files[0];

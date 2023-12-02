@@ -407,3 +407,57 @@ footer {
   padding: 10px 0;
   border-top: 2px solid #ccc; /* Đường gạch ngang màu xám */
 }
+
+/* Style the tab */
+.tab_onto {
+  float: left;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: 30%;
+}
+
+/* Style the buttons that are used to open the tab_onto content */
+.tab_onto button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab_onto button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current "tab_onto button" class */
+.tab_onto button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent_onto {
+  float: left;
+  padding: 0px 12px;
+  border: 1px solid #ccc;
+  width: 70%;
+  border-left: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#container_content p,
+h4 {
+  text-align: left;
+}
+
+.tabcontent_onto p {
+  white-space: pre-line;
+}

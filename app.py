@@ -8,6 +8,9 @@ import time
 import soundfile as sf
 import os
 import statistics  # Thêm import thư viện statistics
+from owlready2 import *
+import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -17,7 +20,7 @@ categories = ['Ca_tru', 'Cheo', 'Hat_chau_van', 'Ho',
               'Nhac_cung_dinh', 'Nhac_tai_tu', 'Quan_ho', 'Xam']
 
 # Load mô hình
-model = load_model('./Model/lenet_bs32_10s_vs02.h5')
+model = load_model('./Model/lenet_bs32_10s_vs02.h5', compile=False)
 
 # Đọc thông tin từ tập tin
 music_info = {}
@@ -145,8 +148,9 @@ def upload():
     segment_parts = cut_wav_file('uploads/audio.wav', 'uploads/audio_cut', 10)
 
     segment_results = []
-
+    computation_time = []
     for i, segment_part in enumerate(segment_parts):
+        start = time.time()
         create_spectrogram(segment_part, f'static/spectrogram{i}.png')
         img_path = f'static/spectrogram{i}.png'
         img = cv2.imread(img_path)
@@ -161,9 +165,13 @@ def upload():
         print(
             f"Segment {i + 1}: Nhãn: {class_name}, Độ chính xác: {confidence}%")
 
+        # print(f'Time: {time.time() - start}')
+        computation_time.append(time.time() - start)
+
         segment_results.append(
             {'segment_number': i, 'class_name': class_name, 'confidence': confidence, 'img_path': img_path})
 
+    print("time: ", statistics.mean(computation_time))
     label_counts = {}  # Đếm số lần xuất hiện của từng nhãn
     label_confidences = {}  # Lưu lại độ tin cậy của từng nhãn
 
@@ -206,6 +214,57 @@ def upload():
     # Định nghĩa đường dẫn ảnh cho đoạn phổ biến nhất
     segment_img_paths = f'static/spectrogram{most_common_results[-1]["segment_number"]}.png'
 
+    # Tạo danh sách lưu thông tin từ ontology
+    ontology_info = []
+
+    # Sử dụng đường dẫn tới ontology của bạn
+    ontology_path = "F:/protege/VIPRIME.owl"
+    onto = get_ontology(ontology_path).load()
+
+    # Thực hiện suy luận với trình suy luận mặc định
+    # sync_reasoner(infer_property_values=True)
+
+    # Đặt giá trị mặc định cho biến music_type
+    music_type = None
+
+    if most_common_label == 'Ca_tru':
+        music_type = onto.Ca_tru
+    elif most_common_label == 'Cheo':
+        music_type = onto.Cheo
+    elif most_common_label == 'Hat_chau_van':
+        music_type = onto.Hat_chau_van
+    elif most_common_label == 'Ho':
+        music_type = onto.Ho
+    elif most_common_label == 'Quan_ho':
+        music_type = onto.Quan_ho
+    elif most_common_label == 'Xam':
+        music_type = onto.Xam
+    elif most_common_label == 'Dan_ca_tai_tu':
+        music_type = onto.Dan_ca_tai_tu
+    elif most_common_label == 'Nhac_cung_dinh':
+        music_type = onto.Nhac_cung_dinh
+
+    # Truy cập các individuals và properties
+    label_list = list(onto.search(type=music_type))
+
+    for individual in label_list:
+        ontology = {}
+        ontology["Tên tác phẩm"] = individual.co_ten_la[0]
+        ontology["Của tác giả"] = individual.cua_tac_gia[0]
+        ontology["Link bài hát"] = individual.co_URL_la[0]
+        nhac_cua_dan_toc = individual.la_cua_dan_toc
+        ontology["Là của dân tộc"] = [
+            ndt.label[0] for ndt in nhac_cua_dan_toc]
+        nguon_goc = individual.co_nguon_goc_tu
+        ontology["Có nguồn gốc từ"] = [
+            ng.label[0] for ng in nguon_goc]
+        nhac_cua = individual.la_nhac_cua
+        ontology["Là nhạc của"] = [nc.label[0] for nc in nhac_cua]
+        ontology["Thuộc dòng nhạc"] = [
+            nc.label[0] for nc in onto.get_parents_of(music_type)]
+        ontology["Mô tả"] = music_type.duoc_mo_ta_la[0]
+        ontology_info.append(ontology)
+
     return render_template(
         'index.html',
         category=info_music,
@@ -217,6 +276,7 @@ def upload():
         info_link=info_link,
         youtube_links=youtube_links.get(most_common_label, []),
         segment_img_paths=segment_img_paths,
+        ontology_info=ontology_info
     )
 
 
