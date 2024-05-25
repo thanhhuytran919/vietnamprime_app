@@ -16,11 +16,11 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
 path = "./Spectrograms/"
-categories = ['Ca_tru', 'Cheo', 'Hat_chau_van', 'Ho',
+categories = ['Ca_tru', 'Cheo', 'Exception', 'Hat_chau_van', 'Ho',
               'Nhac_cung_dinh', 'Nhac_tai_tu', 'Quan_ho', 'Xam']
 
 # Load mô hình
-model = load_model('./Model/lenet_bs32_10s_vs02.h5', compile=False)
+model = load_model('./Model/lenet_bs24_10s_new.h5', compile=False)
 
 # Đọc thông tin từ tập tin
 music_info = {}
@@ -218,7 +218,7 @@ def upload():
     ontology_info = []
 
     # Sử dụng đường dẫn tới ontology của bạn
-    ontology_path = "F:/protege/VIPRIME.owl"
+    ontology_path = "./ontology/VIPRIME.owl"
     onto = get_ontology(ontology_path).load()
 
     # Thực hiện suy luận với trình suy luận mặc định
@@ -244,26 +244,38 @@ def upload():
     elif most_common_label == 'Nhac_cung_dinh':
         music_type = onto.Nhac_cung_dinh
 
-    # Truy cập các individuals và properties
-    label_list = list(onto.search(type=music_type))
-
-    for individual in label_list:
+    if most_common_label == 'Exception':
         ontology = {}
-        ontology["Tên tác phẩm"] = individual.co_ten_la[0]
-        ontology["Của tác giả"] = individual.cua_tac_gia[0]
-        ontology["Link bài hát"] = individual.co_URL_la[0]
-        nhac_cua_dan_toc = individual.la_cua_dan_toc
-        ontology["Là của dân tộc"] = [
-            ndt.label[0] for ndt in nhac_cua_dan_toc]
-        nguon_goc = individual.co_nguon_goc_tu
-        ontology["Có nguồn gốc từ"] = [
-            ng.label[0] for ng in nguon_goc]
-        nhac_cua = individual.la_nhac_cua
-        ontology["Là nhạc của"] = [nc.label[0] for nc in nhac_cua]
-        ontology["Thuộc dòng nhạc"] = [
-            nc.label[0] for nc in onto.get_parents_of(music_type)]
-        ontology["Mô tả"] = music_type.duoc_mo_ta_la[0]
+        ontology["Tên tác phẩm"] = ""
+        ontology["Của tác giả"] = ""
+        ontology["Link bài hát"] = ""
+        ontology["Là của dân tộc"] = ""
+        ontology["Có nguồn gốc từ"] = ""
+        ontology["Là nhạc của"] = ""
+        ontology["Thuộc dòng nhạc"] = ""
+        ontology["Mô tả"] = ""
         ontology_info.append(ontology)
+    else:
+        # Truy cập các individuals và properties
+        label_list = list(onto.search(type=music_type))
+
+        for individual in label_list:
+            ontology = {}
+            ontology["Tên tác phẩm"] = individual.co_ten_la[0]
+            ontology["Của tác giả"] = individual.cua_tac_gia[0]
+            ontology["Link bài hát"] = individual.co_URL_la[0]
+            nhac_cua_dan_toc = individual.la_cua_dan_toc
+            ontology["Là của dân tộc"] = [
+                ndt.label[0] for ndt in nhac_cua_dan_toc]
+            nguon_goc = individual.co_nguon_goc_tu
+            ontology["Có nguồn gốc từ"] = [
+                ng.label[0] for ng in nguon_goc]
+            nhac_cua = individual.la_nhac_cua
+            ontology["Là nhạc của"] = [nc.label[0] for nc in nhac_cua]
+            ontology["Thuộc dòng nhạc"] = [
+                nc.label[0] for nc in onto.get_parents_of(music_type)]
+            ontology["Mô tả"] = music_type.duoc_mo_ta_la[0]
+            ontology_info.append(ontology)
 
     return render_template(
         'index.html',

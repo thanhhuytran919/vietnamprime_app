@@ -461,3 +461,12 @@ h4 {
 .tabcontent_onto p {
   white-space: pre-line;
 }
+
+.mt {
+  text-align: justify;
+}
+
+#container_content p,
+h4 {
+  text-align: justify;
+}
